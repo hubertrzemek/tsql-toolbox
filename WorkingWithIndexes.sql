@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------
 -- List All Indexes in the Database
 SELECT 
     s.name AS SchemaName,
@@ -12,7 +13,7 @@ JOIN sys.tables t ON i.object_id = t.object_id
 JOIN sys.schemas s ON t.schema_id = s.schema_id
 WHERE i.index_id > 0
 ORDER BY t.name, i.index_id;
-
+------------------------------------------------------------------------------
 -- List All Indexes for a Specific Table
 SELECT 
     i.name AS IndexName,
@@ -22,8 +23,7 @@ SELECT
 FROM sys.indexes i
 WHERE i.object_id = OBJECT_ID('dbo.TableName')
     AND i.index_id > 0;
-
-
+------------------------------------------------------------------------------
 -- Find the Table on Which an Index Is Created
 SELECT 
     i.name AS IndexName,
@@ -33,7 +33,7 @@ FROM sys.indexes i
 JOIN sys.tables t ON i.object_id = t.object_id
 JOIN sys.schemas s ON t.schema_id = s.schema_id
 WHERE i.name = 'YourIndexName';
-
+------------------------------------------------------------------------------
 -- Find Columns Used by a Specific Index
 SELECT
     i.name AS IndexName,
@@ -51,8 +51,7 @@ JOIN sys.tables t
     ON t.object_id = i.object_id
 WHERE i.name = 'YourIndexName'
 ORDER BY ic.is_included_column, ic.key_ordinal;
-
-
+------------------------------------------------------------------------------
 -- Find All Indexes That Include a Specific Column
 
 SELECT
@@ -70,8 +69,7 @@ JOIN sys.tables t
     ON t.object_id = i.object_id
 WHERE c.name = 'ColumnName'
 ORDER BY t.name, i.name;
-
-
+------------------------------------------------------------------------------
 -- Check Index Fragmentation
 SELECT
     DB_NAME() AS DatabaseName,
@@ -84,8 +82,7 @@ JOIN sys.indexes i
     ON ips.object_id = i.object_id AND ips.index_id = i.index_id
 WHERE ips.page_count > 100
 ORDER BY ips.avg_fragmentation_in_percent DESC;
-
-
+------------------------------------------------------------------------------
 -- Check Index Usage Statistics
 SELECT 
     DB_NAME(database_id) AS DatabaseName,
@@ -98,9 +95,7 @@ SELECT
 FROM sys.dm_db_index_usage_stats
 WHERE database_id = DB_ID()
 ORDER BY user_scans DESC;
-
-
-
+------------------------------------------------------------------------------
 -- Find Unused Indexes
 SELECT 
     s.name AS SchemaName,
@@ -115,8 +110,7 @@ JOIN sys.schemas s ON t.schema_id = s.schema_id
 WHERE i.index_id > 0
   AND u.index_id IS NULL
 ORDER BY t.name;
-
-
+------------------------------------------------------------------------------
 -- Find Missing Indexes Suggested by the Optimizer
 SELECT
     DB_NAME(mid.database_id) AS DatabaseName,
@@ -132,7 +126,7 @@ JOIN sys.dm_db_missing_index_groups mig
 JOIN sys.dm_db_missing_index_details mid
     ON mig.index_handle = mid.index_handle
 ORDER BY migs.avg_user_impact DESC;
-
+------------------------------------------------------------------------------
 -- Create Index Examples (Nonclustered, Clustered, INCLUDE)
 CREATE INDEX IX_Table_Column
 ON dbo.Table (Column);
@@ -143,9 +137,7 @@ INCLUDE (ColumnB, ColumnC);
 
 CREATE CLUSTERED INDEX IX_Table_Clustered
 ON dbo.Table (ID);
-
-
-
-
+------------------------------------------------------------------------------
 -- Drop an Index
 DROP INDEX IX_Table_Column ON dbo.Table;
+------------------------------------------------------------------------------
